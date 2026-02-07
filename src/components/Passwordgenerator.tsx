@@ -12,6 +12,7 @@ import {
 import { Slider } from "./ui/slider";
 import { Switch } from "./ui/switch";
 import { RefreshCw, Copy, Check } from "lucide-react";
+import { EFF_WORDS } from "../data/eff_large.json";
 
 interface PasswordGeneratorProps {
   open: boolean;
@@ -19,120 +20,7 @@ interface PasswordGeneratorProps {
   onGenerate: (password: string) => void;
 }
 
-const WORD_LIST = [
-  "correct",
-  "horse",
-  "battery",
-  "staple",
-  "dragon",
-  "monkey",
-  "puzzle",
-  "secret",
-  "castle",
-  "thunder",
-  "rainbow",
-  "galaxy",
-  "planet",
-  "ocean",
-  "mountain",
-  "forest",
-  "river",
-  "sunset",
-  "coffee",
-  "wizard",
-  "knight",
-  "phoenix",
-  "crystal",
-  "shadow",
-  "silver",
-  "golden",
-  "diamond",
-  "emerald",
-  "tiger",
-  "eagle",
-  "wolf",
-  "falcon",
-  "anchor",
-  "compass",
-  "voyage",
-  "island",
-  "treasure",
-  "captain",
-  "pirate",
-  "mermaid",
-  "unicorn",
-  "griffin",
-  "centaur",
-  "pegasus",
-  "kraken",
-  "atlantis",
-  "olympus",
-  "valhalla",
-  "nebula",
-  "cosmos",
-  "meteor",
-  "comet",
-  "aurora",
-  "eclipse",
-  "solstice",
-  "equinox",
-  "quantum",
-  "neutron",
-  "photon",
-  "electron",
-  "proton",
-  "particle",
-  "energy",
-  "velocity",
-  "harmony",
-  "melody",
-  "rhythm",
-  "symphony",
-  "chorus",
-  "sonata",
-  "concerto",
-  "prelude",
-  "crimson",
-  "scarlet",
-  "azure",
-  "violet",
-  "amber",
-  "jade",
-  "ivory",
-  "ebony",
-  "thunder",
-  "lightning",
-  "blizzard",
-  "tempest",
-  "monsoon",
-  "typhoon",
-  "cyclone",
-  "tornado",
-  "glacier",
-  "volcano",
-  "desert",
-  "tundra",
-  "prairie",
-  "canyon",
-  "valley",
-  "summit",
-  "orchid",
-  "lotus",
-  "jasmine",
-  "tulip",
-  "rose",
-  "lily",
-  "daisy",
-  "violet",
-  "maple",
-  "willow",
-  "cedar",
-  "pine",
-  "birch",
-  "oak",
-  "elm",
-  "ash",
-];
+const WORD_LIST: string[] = EFF_WORDS;
 
 const SEPARATORS = ["-", "_", ".", ",", " ", ""];
 const CAPITALIZE_OPTIONS = ["none", "first", "all", "random"] as const;
@@ -197,7 +85,7 @@ export default function PasswordGenerator({
     if (includeNumbers) ensureChars.push(numbers);
     if (includeSymbols) ensureChars.push(symbols);
 
-    ensureChars.forEach((set, idx) => {
+    ensureChars.forEach((set, _) => {
       if (!result.split("").some((char) => set.includes(char))) {
         const randomChar = set[Math.floor(Math.random() * set.length)];
         const pos = Math.floor(Math.random() * result.length);
@@ -410,7 +298,7 @@ export default function PasswordGenerator({
                   value={[wordCount]}
                   onValueChange={(value) => setWordCount(value[0])}
                   min={3}
-                  max={8}
+                  max={15}
                   step={1}
                   className="w-full"
                 />

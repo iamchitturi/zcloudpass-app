@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import {
   Lock,
-  ShieldCheck,
-  KeyRound,
   ArrowRight,
   Sun,
   Moon,

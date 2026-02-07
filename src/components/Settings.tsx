@@ -12,14 +12,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Alert, AlertDescription } from "./ui/alert";
-import {
-  ArrowLeft,
-  Lock,
-  AlertCircle,
-  CheckCircle2,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { ArrowLeft, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface SettingsProps {
   onLogout: () => void;
@@ -27,11 +20,7 @@ interface SettingsProps {
   toggleTheme: () => void;
 }
 
-export default function Settings({
-  onLogout,
-  theme,
-  toggleTheme,
-}: SettingsProps) {
+export default function Settings({ onLogout }: SettingsProps) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

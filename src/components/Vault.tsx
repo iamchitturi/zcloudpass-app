@@ -4,7 +4,6 @@ import { api } from "../lib/api";
 import {
   decryptVault,
   encryptVault,
-  generatePassword,
   type Vault,
   type VaultEntry,
 } from "../lib/crypto";
@@ -43,6 +42,7 @@ import {
   FileText,
   ArrowLeft,
   LucideDice3,
+  Pencil,
 } from "lucide-react";
 import PasswordGenerator from "./Passwordgenerator";
 
@@ -461,6 +461,7 @@ export default function Vault({ onLogout, theme, toggleTheme }: VaultProps) {
                 <ChevronRight className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground/40" />
               </button>
             </div>
+            <hr className="border-muted" />
 
             {filteredEntries.length > 0 ? (
               <div className="space-y-px px-2 pt-2">
@@ -471,56 +472,59 @@ export default function Vault({ onLogout, theme, toggleTheme }: VaultProps) {
                     selectedEntry?.id === entry.id && viewMode === "view";
 
                   return (
-                    <button
-                      key={entry.id}
-                      onClick={() => handleSelectEntry(entry)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors group ${
-                        isActive
-                          ? "md:bg-foreground md:text-background"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <div
-                        className={`w-8 h-8 rounded flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden ${
-                          isActive ? "text-foreground" : "text-primary"
+                    <div>
+                      <button
+                        key={entry.id}
+                        onClick={() => handleSelectEntry(entry)}
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors group ${
+                          isActive
+                            ? "md:bg-foreground md:text-background"
+                            : "hover:bg-muted"
                         }`}
                       >
-                        {showFavicon ? (
-                          <img
-                            src={faviconUrl}
-                            alt={entry.name}
-                            className="w-full h-full object-cover"
-                            onError={() => handleFaviconError(entry.id)}
-                          />
-                        ) : (
-                          <img
-                            src={getLetterAvatarUrl(entry.name)}
-                            alt={entry.name}
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm truncate">
-                          {entry.name}
-                        </div>
                         <div
-                          className={`text-xs truncate ${isActive ? "text-background/60" : "text-muted-foreground"}`}
+                          className={`w-8 h-8 rounded flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden ${
+                            isActive ? "text-foreground" : "text-primary"
+                          }`}
                         >
-                          {entry.username ||
-                            (entry.url
-                              ? entry.url.replace(/^https?:\/\//, "")
-                              : "No details")}
+                          {showFavicon ? (
+                            <img
+                              src={faviconUrl}
+                              alt={entry.name}
+                              className="w-full h-full object-cover"
+                              onError={() => handleFaviconError(entry.id)}
+                            />
+                          ) : (
+                            <img
+                              src={getLetterAvatarUrl(entry.name)}
+                              alt={entry.name}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
                         </div>
-                      </div>
-                      <ChevronRight
-                        className={`w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity ${
-                          isActive
-                            ? "text-background/40"
-                            : "text-muted-foreground/40"
-                        }`}
-                      />
-                    </button>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm truncate">
+                            {entry.name}
+                          </div>
+                          <div
+                            className={`text-xs truncate ${isActive ? "text-background/60" : "text-muted-foreground"}`}
+                          >
+                            {entry.username ||
+                              (entry.url
+                                ? entry.url.replace(/^https?:\/\//, "")
+                                : "No details")}
+                          </div>
+                        </div>
+                        <ChevronRight
+                          className={`w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity ${
+                            isActive
+                              ? "text-background/40"
+                              : "text-muted-foreground/40"
+                          }`}
+                        />
+                      </button>
+                      <hr className="border-muted" />
+                    </div>
                   );
                 })}
               </div>
@@ -599,7 +603,7 @@ export default function Vault({ onLogout, theme, toggleTheme }: VaultProps) {
                     onClick={() => handleEditEntry(selectedEntry)}
                     className="h-10 w-10"
                   >
-                    <Settings className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -697,7 +701,7 @@ export default function Vault({ onLogout, theme, toggleTheme }: VaultProps) {
                     {viewMode === "create" ? (
                       <Plus className="w-8 h-8 text-primary" />
                     ) : (
-                      <Settings className="w-8 h-8 text-primary" />
+                      <Pencil className="w-8 h-8 text-primary" />
                     )}
                   </div>
                   <div className="min-w-0">
@@ -861,14 +865,14 @@ export default function Vault({ onLogout, theme, toggleTheme }: VaultProps) {
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground space-y-4">
-              <div className="w-40 h-40 bg-muted/30 rounded-full flex items-center justify-center overflow-hidden">
+              <div className="w-40 h-40 flex items-center justify-center overflow-hidden">
                 <img
                   src="/favicon.svg"
                   alt="zCloudPass"
-                  className="w-32 h-32 opacity-20 object-contain"
+                  className="w-32 h-32 object-contain"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 opacity-80">
                 <h3 className="text-xl font-bold text-foreground">
                   Select an item
                 </h3>
