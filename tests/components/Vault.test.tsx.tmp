@@ -1,0 +1,318 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '../test-utils';
+import Vault from '../../src/components/Vault';
+import { api } from '../../src/lib/api';
+import { decryptVault } from '../../src/lib/crypto';
+
+// Mock the API
+vi.mock('../../src/lib/api', () => ({
+  api: {
+    getVault: vi.fn(),
+    updateVault: vi.fn(),
+    logout: vi.fn(),
+  },
+}));
+
+// Mock crypto
+vi.mock('../../src/lib/crypto', () => ({
+  decryptVault: vi.fn(),
+  encryptVault: vi.fn(),
+  createEmptyVault: vi.fn(() => ({ entries: [] })),
+  generatePassword: vi.fn(),
+}));
+
+describe('Vault Component', () => {
+  const mockOnLogout = vi.fn();
+  const mockTheme = 'light' as const;
+  const mockToggleTheme = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
+    localStorage.setItem('master_password_hash', 'test-password');
+  });
+
+  it('should render vault container', () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      <Vault
+        onLogout={mockOnLogout}
+        theme={mockTheme}
+        toggleTheme={mockToggleTheme}
+      />
+    );
+
+    expect(screen.getByText(/vault|passwords|entries/i)).toBeTruthy();
+  });
+
+  it('should fetch vault on mount', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(api.getVault).toHaveBeenCalled();
+    });
+  });
+
+  it('should decrypt vault data after fetching', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(decryptVault).toHaveBeenCalledWith(
+        'encrypted-data',
+        expect.any(String)
+      );
+    });
+  });
+
+  it('should display password entries', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({
+      entries: [
+        {
+          id: '1',
+          name: 'Gmail',
+          username: 'user@gmail.com',
+          password: 'secret',
+          url: 'https://gmail.com',
+        },
+      ],
+    });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Gmail')).toBeTruthy();
+      expect(screen.getByText('user@gmail.com')).toBeTruthy();
+    });
+  });
+
+  it('should show empty vault message when no entries', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/empty|no entries|add/i)).toBeTruthy();
+    });
+  });
+
+  it('should have add password button', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      const addButton = screen.getByRole('button', { name: /add|new|create/i });
+      expect(addButton).toBeTruthy();
+    });
+  });
+
+  it('should have logout button', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      const logoutButton = screen.getByRole('button', { name: /logout|sign out|exit/i });
+      expect(logoutButton).toBeTruthy();
+    });
+  });
+
+  it('should have theme toggle button', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({ entries: [] });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      const themeButton = screen.queryByRole('button', { name: /theme|dark|light|toggle/i });
+      expect(themeButton).toBeTruthy();
+    });
+  });
+
+  it('should handle null vault gracefully', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: null,
+    });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/empty|no entries|add/i)).toBeTruthy();
+    });
+  });
+
+  it('should handle fetch errors gracefully', async () => {
+    (api.getVault as any).mockRejectedValueOnce(
+      new Error('Failed to fetch vault')
+    );
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/error|failed/i)).toBeTruthy();
+    });
+  });
+
+  it('should display password entry details when available', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({
+      entries: [
+        {
+          id: '1',
+          name: 'GitHub',
+          username: 'myusername',
+          password: 'token123',
+          url: 'https://github.com',
+          notes: 'Development account',
+        },
+      ],
+    });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeTruthy();
+      expect(screen.getByText('https://github.com')).toBeTruthy();
+      expect(screen.getByText('Development account')).toBeTruthy();
+    });
+  });
+
+  it('should handle optional vault fields gracefully', async () => {
+    (api.getVault as any).mockResolvedValueOnce({
+      encrypted_vault: 'encrypted-data',
+    });
+    (decryptVault as any).mockResolvedValueOnce({
+      entries: [
+        {
+          id: '1',
+          name: 'Minimal Entry',
+          // No other optional fields
+        },
+      ],
+    });
+
+    render(
+      render(
+        <Vault
+          onLogout={mockOnLogout}
+          theme={mockTheme}
+          toggleTheme={mockToggleTheme}
+        />
+);
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Minimal Entry')).toBeTruthy();
+    });
+  });
+});
