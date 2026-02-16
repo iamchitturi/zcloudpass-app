@@ -1,6 +1,7 @@
 // API client for zCloudPass backend
-// Update this URL to match your backend server
-const API_BASE_URL = "http://localhost:3000/api/v1";
+// Set VITE_API_BASE_URL environment variable to point to your backend
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
 interface RegisterRequest {
   username?: string;
