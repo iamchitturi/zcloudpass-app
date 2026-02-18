@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import DecryptedText from "./DecryptedText";
+import GridScan from "./GridScan";
 import {
   Lock,
   ArrowRight,
@@ -22,7 +23,24 @@ export default function Landing({ theme, toggleTheme }: LandingProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen relative overflow-hidden">
+      <GridScan
+        sensitivity={0.6}
+        lineThickness={2}
+        linesColor="#121212"
+        scanColor="#f60440"
+        scanOpacity={0.4}
+        gridScale={0.1}
+        lineStyle="solid"
+        lineJitter={0.1}
+        scanDirection="pingpong"
+        noiseIntensity={0.01}
+        scanGlow={0.7}
+        scanSoftness={2.5}
+        scanDuration={2}
+        scanDelay={2}
+        scanOnClick
+      />
       <nav className="flex items-center justify-between px-4 md:px-6 lg:px-12 py-4 border-b relative">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded flex items-center justify-center overflow-hidden">
