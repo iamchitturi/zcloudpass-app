@@ -71,6 +71,16 @@ For more detailed platform steps see the Tauri docs: https://tauri.app
 - The client performs encryption/decryption of vault data. The server only stores an opaque `encrypted_vault` string — do not decrypt on the server.
 - The default API client and sample backend implementations are minimal and intended for development. Implement proper authentication, rate limiting, and validation before production use.
 
+## Deployment
+
+This application is deployed on **[Vercel](https://vercel.com)**. The deployment configuration is defined in `vercel.json` at the project root.
+
+- **Live URL**: Hosted on Vercel (auto-deployed from the `master` branch).
+- **Build command**: `npm run build`
+- **Output directory**: `dist`
+- **Framework**: Vite
+- **SPA rewrites**: All routes are rewritten to `/index.html` for client-side routing.
+
 ## Contributing
 
 PRs and issues welcome. Keep changes small and focused.
